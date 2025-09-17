@@ -1,7 +1,6 @@
 from langgraph.graph import StateGraph, START, END
 from IPython.display import Image, display
-from ..workflow.agents import Agents
-from ..workflow.nodes import State
+from ..workflow.nodes import State, Workflow
 import os
 
 builder = StateGraph(State)

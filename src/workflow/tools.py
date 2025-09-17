@@ -15,28 +15,29 @@ class Tools:
                 "Date": f"{data['value'][0]['dataHoraCotacao']}"}
             
     @staticmethod
-    @tool
+    @tool("previous_dollar")
     def previous_dollar():
         """
-        Busca a cotação do dólar em uma data específica através da API do Banco Central do Brasil.
+        Busca a cotação do dólar do dolar no dia anterior através da API do Banco Central do Brasil.
         Retorna os dados da cotação do dólar para a data especificada.
         """
         day_week = datetime.now().strftime('%A')
         day_actual = datetime.now()
 
-        if day_week == "Sunday" or day_week == "Monday":
-            if day_week == "Sunday":
-                day_adjusted = day_actual - timedelta(days=2)
-                day_adjusted = day_adjusted.strftime('%m-%d-%Y')
-                dollar_quote = Tools.dollar(day_adjusted)
-                return dollar_quote
-            elif day_week == "Monday":
-                day_adjusted = day_actual - timedelta(days=3)
-                day_adjusted = day_adjusted.strftime('%m-%d-%Y')
-                dollar_quote = Tools.dollar(day_adjusted)
-                return dollar_quote
+        if day_week == "Sunday":
+            day_adjusted = day_actual - timedelta(days=2)
+            day_adjusted = day_adjusted.strftime('%m-%d-%Y')
+            dollar_quote = Tools.dollar(day_adjusted)
+            return dollar_quote
+        elif day_week == "Monday":
+            day_adjusted = day_actual - timedelta(days=3)
+            day_adjusted = day_adjusted.strftime('%m-%d-%Y')
+            dollar_quote = Tools.dollar(day_adjusted)
+            return dollar_quote
         else:
-            dollar_quote = Tools.dollar(day_actual)
+            day_adjusted = day_actual - timedelta(days=1)
+            day_adjusted = day_adjusted.strftime('%m-%d-%Y')
+            dollar_quote = Tools.dollar(day_adjusted)
             return dollar_quote
                 
 # invoke = Tools().previous_dollar.invoke({})
