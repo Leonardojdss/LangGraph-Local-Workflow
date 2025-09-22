@@ -1,5 +1,6 @@
 from langchain_core.tools import tool
 from datetime import datetime, timedelta
+import yfinance as yf
 import requests
 
 class Tools:
@@ -18,8 +19,8 @@ class Tools:
     @tool("previous_dollar")
     def previous_dollar():
         """
-        Busca a cotação do dólar do dolar no dia anterior através da API do Banco Central do Brasil.
-        Retorna os dados da cotação do dólar para a data especificada.
+        Fetches the previous day's US dollar exchange rate using the Central Bank of Brazil API.
+        Returns the exchange rate data for the specified date.
         """
         day_week = datetime.now().strftime('%A')
         day_actual = datetime.now()
@@ -39,6 +40,21 @@ class Tools:
             day_adjusted = day_adjusted.strftime('%m-%d-%Y')
             dollar_quote = Tools.dollar(day_adjusted)
             return dollar_quote
-                
-# invoke = Tools().previous_dollar.invoke({})
-# print(invoke)
+         
+    @staticmethod
+    @tool("search_yahoo_finance")
+    def yahoo_finance(companies: list) -> list:
+        """
+        Tool to fetch stock prices of companies listed on the US stock exchange.
+
+        Args:
+            companies: List of company codes (e.g., ["MSFT", "GOOG", "AAPL"]).
+        """
+        results = []
+        for company in companies:
+            current_price = yf.Ticker(company).info
+            results.append(f"{company}: {current_price['currentPrice']}")
+        print(results)
+        return results
+    
+# invoke = Tools().yahoo_finance.invoke({"companies": ["MSFT", "GOOG", "AAPL"]})

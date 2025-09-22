@@ -3,7 +3,7 @@ from ..infrastructure.connection_ollama import OllamaConnection
 from ..workflow.tools import Tools
 
 llm = OllamaConnection().connect()
-tool_dolar = Tools.previous_dollar
+tools = Tools
 
 class Agents:
     """
@@ -12,7 +12,17 @@ class Agents:
     @staticmethod 
     def agent_dollar():
         agent_dollar = create_react_agent(
+            prompt="Você é um assistente que sempre responde a última cotação do dolar usando a ferramenta disponível.",
             model=llm,
-            tools=[tool_dolar],
+            tools=[tools.dollar()],
         )
         return agent_dollar
+    
+    @staticmethod
+    def agent_yahoo_finance():
+        agent_yahoo_finance = create_react_agent(
+            prompt="Você é um assistente que sempre responde o valor de ações das empresas enviadas pelo usuário",
+            model=llm,
+            tools=[],
+        )
+        return agent_yahoo_finance
