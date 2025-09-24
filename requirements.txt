@@ -1,0 +1,14 @@
+# Core LangGraph dependencies
+langgraph>=0.1.0
+langchain-ollama>=0.1.0
+langchain-core>=0.2.0
+
+# Financial data APIs
+yfinance>=0.2.0
+requests>=2.28.0
+
+# Utilities
+typing-extensions>=4.0.0
+
+# Optional: For Jupyter notebook support and visualization
+ipython>=8.0.0
