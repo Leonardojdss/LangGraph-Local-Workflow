@@ -47,6 +47,7 @@ class Tools:
         """
         Tool to fetch stock prices of companies listed on the US stock exchange.
 
+
         Args:
             companies: List of company codes (e.g., ["MSFT", "GOOG", "AAPL"]).
         """
