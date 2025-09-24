@@ -1,12 +1,17 @@
 from langchain_core.tools import tool
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 import yfinance as yf
 import requests
+import os
+
+load_dotenv()
 
 class Tools:
     """
-    Classe de ferramentas para consulta de dados financeiros.
+    Class of tools.
     """
+    
     @staticmethod
     def dollar(date):
         response = requests.get(f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{date}'&$top=100&$format=json")
@@ -57,4 +62,23 @@ class Tools:
         print(results)
         return results
     
-# invoke = Tools().yahoo_finance.invoke({"companies": ["MSFT", "GOOG", "AAPL"]})
+    @staticmethod
+    @tool("search_trend_topic_previous_day")
+    def trend_topic_previous_day() -> dict:
+        """
+        Tool for search trend topics of previous day
+        """
+        api_key_news_notice = os.getenv("KEY_NEWS_API")
+        
+        if not api_key_news_notice:
+            return {"Error": "Missing KEY_NEWS_API in environment."}
+        
+        try:
+            previous_day = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+            url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key_news_notice}&from={previous_day}"
+            response = requests.get(url).json()
+            return response
+        except Exception as error:
+            return {"Error": f"error when running tool {error}"}
+    
+invoke = Tools().trend_topic_previous_day.invoke({})
