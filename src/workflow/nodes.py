@@ -18,5 +18,3 @@ class Workflow:
         
         response_content = result_dollar["messages"][-1].content
         return {"dolar": response_content}
-
-print(Workflow.dolar({"dolar":"","notices":"","yahoo_finance":"","combined_output":""}))
