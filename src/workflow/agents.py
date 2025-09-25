@@ -14,7 +14,7 @@ class Agents:
         agent_dollar = create_react_agent(
             prompt="Você é um assistente que sempre responde a última cotação do dolar usando a ferramenta disponível.",
             model=llm,
-            tools=[tools.dollar()],
+            tools=[tools.previous_dollar],
         )
         return agent_dollar
     
@@ -23,6 +23,15 @@ class Agents:
         agent_yahoo_finance = create_react_agent(
             prompt="Você é um assistente que sempre responde o valor de ações das empresas enviadas pelo usuário",
             model=llm,
-            tools=[],
+            tools=[tools.yahoo_finance],
         )
         return agent_yahoo_finance
+    
+    @staticmethod
+    def agent_trend_topic_previous_day():
+        agent_trend_topic_previous_day = create_react_agent(
+            prompt="Você é um assistente que sempre responde em portugues-BR os tópicos de tendência do dia anterior usando a ferramenta disponível.",
+            model=llm,
+            tools=[tools.trend_topic_previous_day],
+        )
+        return agent_trend_topic_previous_day

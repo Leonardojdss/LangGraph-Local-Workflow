@@ -11,9 +11,14 @@ class Tools:
     """
     Class of tools.
     """
-    
     @staticmethod
     def dollar(date):
+        """
+        Get previous day US dollar exchange rate using the Central Bank of Brazil API.
+        
+        args:
+            date: Date in the format 'MM-DD-YYYY'
+        """
         response = requests.get(f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{date}'&$top=100&$format=json")
         data = response.json()
         return {"Dollar_sale": f"{data['value'][0]['cotacaoVenda']} reais",
@@ -30,21 +35,24 @@ class Tools:
         day_week = datetime.now().strftime('%A')
         day_actual = datetime.now()
 
-        if day_week == "Sunday":
-            day_adjusted = day_actual - timedelta(days=2)
-            day_adjusted = day_adjusted.strftime('%m-%d-%Y')
-            dollar_quote = Tools.dollar(day_adjusted)
-            return dollar_quote
-        elif day_week == "Monday":
-            day_adjusted = day_actual - timedelta(days=3)
-            day_adjusted = day_adjusted.strftime('%m-%d-%Y')
-            dollar_quote = Tools.dollar(day_adjusted)
-            return dollar_quote
-        else:
-            day_adjusted = day_actual - timedelta(days=1)
-            day_adjusted = day_adjusted.strftime('%m-%d-%Y')
-            dollar_quote = Tools.dollar(day_adjusted)
-            return dollar_quote
+        try:
+            if day_week == "Sunday":
+                day_adjusted = day_actual - timedelta(days=2)
+                day_adjusted = day_adjusted.strftime('%m-%d-%Y')
+                dollar_quote = Tools.dollar(day_adjusted)
+                return dollar_quote
+            elif day_week == "Monday":
+                day_adjusted = day_actual - timedelta(days=3)
+                day_adjusted = day_adjusted.strftime('%m-%d-%Y')
+                dollar_quote = Tools.dollar(day_adjusted)
+                return dollar_quote
+            else:
+                day_adjusted = day_actual - timedelta(days=1)
+                day_adjusted = day_adjusted.strftime('%m-%d-%Y')
+                dollar_quote = Tools.dollar(day_adjusted)
+                return dollar_quote
+        except Exception as error:
+            return {"Error": f"Error when running tool: {error}"} 
          
     @staticmethod
     @tool("search_yahoo_finance")
@@ -56,11 +64,13 @@ class Tools:
             companies: List of company codes (e.g., ["MSFT", "GOOG", "AAPL"]).
         """
         results = []
-        for company in companies:
-            current_price = yf.Ticker(company).info
-            results.append(f"{company}: {current_price['currentPrice']}")
-        print(results)
-        return results
+        try:    
+            for company in companies:
+                current_price = yf.Ticker(company).info
+                results.append(f"{company}: {current_price['currentPrice']}")
+            return results
+        except Exception as error:
+            return [f"Error when running tool: {error}"]
     
     @staticmethod
     @tool("search_trend_topic_previous_day")
@@ -75,10 +85,10 @@ class Tools:
         
         try:
             previous_day = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-            url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key_news_notice}&from={previous_day}"
+            url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key_news_notice}&from={previous_day}&pageSize=5"
             response = requests.get(url).json()
             return response
         except Exception as error:
-            return {"Error": f"error when running tool {error}"}
-    
-invoke = Tools().trend_topic_previous_day.invoke({})
+            return {"Error": f"Error when running tool: {error}"}
+        
+#trend_topic_previous_day = Tools.trend_topic_previous_day.invoke({})

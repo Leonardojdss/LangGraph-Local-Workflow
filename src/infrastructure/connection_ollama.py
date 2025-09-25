@@ -13,15 +13,3 @@ class OllamaConnection:
     def connect(self):
         llm = ChatOllama(model=self.model, temperature=self.temperature)
         return llm
-    
-# if __name__ == "__main__":
-#     llm = OllamaConnection().connect()
-#     messages = [
-#     (
-#         "system",
-#         "voce é um assistente útil que ajuda os usuários a aprender programação.",
-#     ),
-#     ("human", "Eu amo programação."),
-# ]
-#     ai_msg = llm.invoke(messages)
-#     print(ai_msg)
