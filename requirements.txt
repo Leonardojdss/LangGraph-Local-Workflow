@@ -84,3 +84,4 @@ xxhash==3.5.0
 yarl==1.20.1
 yfinance==0.2.66
 zstandard==0.24.0
+langfuse==3.6.1
